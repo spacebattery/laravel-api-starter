@@ -56,4 +56,6 @@ class ClassType extends Model
     use Filterable, Sortable;
 
     protected $fillable = ['name'];
+
+    protected $filterable = ['id', 'name'];
 }

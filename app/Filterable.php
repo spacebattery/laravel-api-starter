@@ -5,6 +5,7 @@ namespace App;
 trait Filterable {
 
     function scopeGenericFilter($query, $filter) {
+        //$this->columns = $this->getConnection()->getSchemaBuilder()->getColumnListing($this->getTable());
         if (isset($filter->where)) {
             foreach ($filter->where as $key => $value) {
                 $this->filter($query, $key, $value);
