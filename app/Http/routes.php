@@ -16,8 +16,15 @@ Route::get('/', function () {
 });
 
 Route::group([
-    'prefix' => 'api',
+    'prefix' => '/api/users',
     'middleware' => ['api']
+], function() {
+    Route::post('login', 'Api\\AuthenticateController@login');
+});
+
+Route::group([
+    'prefix' => 'api',
+    'middleware' => ['api', 'jwt']
 ], function() {
 
     Route::group([
