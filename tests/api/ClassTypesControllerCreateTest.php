@@ -10,9 +10,11 @@ class ClassTypesControllerCreateTest extends TestCase
 {
     use DatabaseTransactions;
 
+    private $url = '/api/classTypes';
+
     public function testSuccess() {
         $name = factory(ClassType::class)->make()->name;
-        $this->json('POST', '/api/classTypes', [
+        $this->json('POST', $this->url, [
             'name' => $name
         ])->seeJsonStructure([
             'id', 'name', 'created_at', 'updated_at'
@@ -22,18 +24,18 @@ class ClassTypesControllerCreateTest extends TestCase
 
     public function testFailedNameUnique() {
         $name = ClassType::orderByRaw("RAND()")->first()->name;
-        $this->json('POST', '/api/classTypes', [
+        $this->json('POST', $this->url, [
             'name' => $name
         ])->seeJsonStructure([
-            'name'
+            'name' => ['*' => []]
         ])->assertResponseStatus(422);
     }
 
     public function testFailedNameRequired()
     {
-        $this->json('POST', '/api/classTypes', [
+        $this->json('POST', $this->url, [
         ])->seeJsonStructure([
-            'name'
+            'name' => ['*' => []]
         ])->assertResponseStatus(422);
         /*
         ->seeJsonEquals([
@@ -45,10 +47,10 @@ class ClassTypesControllerCreateTest extends TestCase
 
     public function testFailedNameMin()
     {
-        $this->json('POST', '/api/classTypes', [
+        $this->json('POST', $this->url, [
             'name' => 'a'
         ])->seeJsonStructure([
-            'name'
+            'name' => ['*' => []]
         ])->assertResponseStatus(422);
     }
 }

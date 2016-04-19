@@ -4,6 +4,17 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\Request;
 
+/**
+ * @SWG\Definition(
+ *   definition="errors/CreateClassTypeRequest",
+ *   @SWG\Property(
+ *     property="name",
+ *     type="array",
+ *     @SWG\Items(type="string")
+ *   )
+ * )
+ */
+
 class CreateClassTypeRequest extends Request
 {
     /**

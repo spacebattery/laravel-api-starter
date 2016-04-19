@@ -154,6 +154,7 @@ return [
         App\Providers\AppServiceProvider::class,
         App\Providers\AuthServiceProvider::class,
         App\Providers\EventServiceProvider::class,
+        Jlapp\Swaggervel\SwaggervelServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
     ],
