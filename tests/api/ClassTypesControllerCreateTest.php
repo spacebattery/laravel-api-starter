@@ -13,9 +13,13 @@ class ClassTypesControllerCreateTest extends TestCase
     private $url = '/api/classTypes';
 
     public function testSuccess() {
+        $token = $this->login('admin');
+
         $name = factory(ClassType::class)->make()->name;
         $this->json('POST', $this->url, [
             'name' => $name
+        ], [
+            'Authorization' => 'Bearer '.$token
         ])->seeJsonStructure([
             'id', 'name', 'created_at', 'updated_at'
         ])->assertResponseStatus(201);
@@ -23,17 +27,24 @@ class ClassTypesControllerCreateTest extends TestCase
     }
 
     public function testFailedNameUnique() {
+        $token = $this->login('admin');
+
         $name = ClassType::orderByRaw("RAND()")->first()->name;
         $this->json('POST', $this->url, [
             'name' => $name
+        ], [
+            'Authorization' => 'Bearer ' . $token
         ])->seeJsonStructure([
             'name' => ['*' => []]
         ])->assertResponseStatus(422);
     }
 
-    public function testFailedNameRequired()
-    {
+    public function testFailedNameRequired() {
+        $token = $this->login('admin');
+
         $this->json('POST', $this->url, [
+        ], [
+            'Authorization' => 'Bearer ' . $token
         ])->seeJsonStructure([
             'name' => ['*' => []]
         ])->assertResponseStatus(422);
@@ -45,12 +56,28 @@ class ClassTypesControllerCreateTest extends TestCase
          */
     }
 
-    public function testFailedNameMin()
-    {
+    public function testFailedNameMin() {
+        $token = $this->login('admin');
+
         $this->json('POST', $this->url, [
             'name' => 'a'
+        ], [
+            'Authorization' => 'Bearer ' . $token
         ])->seeJsonStructure([
             'name' => ['*' => []]
         ])->assertResponseStatus(422);
+    }
+
+    public function testFailedAuthentication() {
+        $name = factory(ClassType::class)->make()->name;
+        $this->json('POST', $this->url, [
+            'name' => $name
+        ])->assertResponseStatus(400);
+
+        $this->json('POST', $this->url, [
+            'name' => $name
+        ], [
+            'Authorization' => 'Bearer ' . 'abcd'
+        ])->assertResponseStatus(400);
     }
 }

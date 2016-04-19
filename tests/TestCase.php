@@ -22,4 +22,9 @@ class TestCase extends Illuminate\Foundation\Testing\TestCase
 
         return $app;
     }
+
+    protected function login($type) {
+        $response = $this->call('POST', '/api/users/login', ['name' => 'admin', 'password' => 'password']);
+        return json_decode($response->content())->token;
+    }
 }
